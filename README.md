@@ -138,16 +138,7 @@ The repository should not contain a private or copyrighted database dump unless 
 
 ## Screenshots and demo
 
-Add your own screenshots to `screenshots/` and embed them here. Do not include API keys, server names, personal paths, or sensitive query results in screenshots.
-
-Example:
-
-```markdown
-![Streamlit application](screenshots/app-interface.png)
-![Sample analytical response](screenshots/sample-analysis.png)
-```
-
-A short screen-recording demo can also be linked here after uploading it to a platform such as YouTube or LinkedIn.
+A short screen-recording demo & a Screenshot will be linked here after uploading it to my LinkedIn.
 
 ## Current limitations and responsible use
 
