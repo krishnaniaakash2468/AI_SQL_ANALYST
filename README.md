@@ -16,9 +16,9 @@ Build an AI-powered data assistant while keeping development and usage within fr
 - Executes database queries through Python and SQLAlchemy.
 - Presents retrieved results and an LLM-generated explanation.
 - Includes a Streamlit interface for conversational interaction.
-- Includes a separate CLI experiment using LangChain's `create_agent()` tool-calling workflow.
+- Includes a CLI version using LangChain's `create_agent()` tool-calling workflow.
 
-The exact capabilities depend on which entry point is run. See [Architecture](ARCHITECTURE.md).
+See [Architecture](ARCHITECTURE.md) for how the pieces fit together.
 
 ## Technology stack
 
@@ -35,11 +35,9 @@ The exact capabilities depend on which entry point is run. See [Architecture](AR
 
 ```text
 AI-Data-Agent/
-├── main.py                 # Manually orchestrated SQL + analysis workflow
 ├── data_agent.py           # LangChain tool-calling CLI experiment
 ├── streamlitapp.py         # Streamlit tool-calling interface
-├── tools.py                # Plain Python database functions
-├── agent_tools.py          # LangChain-decorated database tools
+├── agent_tools.py          # Database functions exposed as LangChain tools
 ├── requirements.txt
 ├── .env.example
 ├── .gitignore
@@ -112,19 +110,13 @@ For the Streamlit interface:
 streamlit run streamlitapp.py
 ```
 
-For the separate CLI tool-calling experiment:
+For the CLI version:
 
 ```powershell
 python data_agent.py
 ```
 
-For the manually orchestrated SQL-generation and analysis workflow:
-
-```powershell
-python main.py
-```
-
-The `main.py`, `data_agent.py`, and `streamlitapp.py` entry points represent different workflows. They are not interchangeable; read [ARCHITECTURE.md](ARCHITECTURE.md) before describing the project.
+Both entry points use the same LangChain tool-calling agent and the same database tools in `agent_tools.py`. See [ARCHITECTURE.md](ARCHITECTURE.md) for details.
 
 ## Database used during development
 
@@ -155,9 +147,8 @@ This is a learning project and a basic AI-powered data-querying application, not
 
 - Complex analytical questions may produce incomplete or shallow reasoning.
 - An LLM-generated explanation can omit relevant records or misinterpret query results.
-- Prompt instructions alone do not enforce read-only SQL execution. The current query execution functions should not be treated as a security boundary.
-- SQL validation, parameterization, query timeouts, row limits, and least-privilege database permissions need stronger implementation and testing before use with sensitive or important data.
-- The manually orchestrated `main.py` workflow follows a fixed Python-controlled sequence; it is not the same as the separate LangChain tool-calling workflow.
+- Read-only SQL is not enforced in code. `execute_query` runs whatever SQL the model passes to it, so the application should not be treated as a security boundary.
+- SQL validation, parameterization, query timeouts, row limits, and least-privilege database permissions need to be implemented and tested before use with sensitive or important data. Until then, connect only with a read-only database login.
 - Gemini API availability, model names, free-tier quotas, and rate limits can change. Free access is not guaranteed indefinitely.
 - Large result sets and advanced statistical analysis are not comprehensively handled.
 

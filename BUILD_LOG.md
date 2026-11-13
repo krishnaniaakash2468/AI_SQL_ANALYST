@@ -40,17 +40,18 @@ Build a basic AI Data Agent for free and run the application and database locall
 - Expanded schema retrieval from an individual table to all relevant tables in the `dbo` schema.
 - Used schema metadata in the SQL-generation prompt.
 
-### 7. Text-to-SQL and analytical interpretation
+### 7. Text-to-SQL and analytical interpretation (early approach)
 - Designed prompts for SQL Server-compatible SELECT query generation.
 - Executed generated SQL and returned results as Pandas DataFrames.
 - Added a second LLM call to interpret query results in relation to the original question.
 - Refined analytical instructions to reduce selective reporting and unsupported conclusions.
+- This fixed-sequence version was later removed from the repository in favour of the tool-calling agent.
 
 ### 8. LangChain tool-calling experiment
 - Wrapped database functions using the `@tool` decorator.
 - Registered tools with LangChain's `create_agent()`.
 - Tested a separate CLI tool-calling workflow.
-- Kept this approach distinct from the manually orchestrated `main.py` pipeline.
+- Compared it with the earlier fixed-sequence pipeline, where Python rather than the model controls the steps.
 
 ### 9. Streamlit interface
 - Developed a Streamlit chat interface around the tool-calling implementation.
@@ -61,9 +62,9 @@ Build a basic AI Data Agent for free and run the application and database locall
 
 | Area | What happened | What I did |
 |---|---|---|
-| Windows security | Running `python tools.py` for the first time was blocked by Windows Smart App Control | Turned Smart App Control off on my development machine so the Python/ODBC process could run. Note that this lowers a Windows protection and is hard to undo, so consider other options on a machine you care about |
+| Windows security | Running an early database test script for the first time was blocked by Windows Smart App Control | Turned Smart App Control off on my development machine so the Python/ODBC process could run. Note that this lowers a Windows protection and is hard to undo, so consider other options on a machine you care about |
 | Python packages | Dependency and import compatibility while setting up LangChain and the agent | Installed everything from `requirements.txt` inside the virtual environment |
-| Database | Needed a working SQL Server / ODBC connection | Used SQLAlchemy with `pyodbc`, ODBC Driver 17 and Windows Authentication; verified with a test query in `tools.py` |
+| Database | Needed a working SQL Server / ODBC connection | Used SQLAlchemy with `pyodbc`, ODBC Driver 17 and Windows Authentication; verified with a test query |
 | Schema | Hardcoding one table would break when tables change | Queried `INFORMATION_SCHEMA.COLUMNS` for all `dbo` tables and kept only table, column and data type |
 | Gemini API: 503 | `gemini-3.1-flash-lite` returned `503 UNAVAILABLE` (high demand) during a Streamlit test | Retried later and switched to another model; `max_retries` handles short spikes |
 | Gemini API: 404 | `gemini-2.5-flash` returned `404 NOT_FOUND` ("no longer available to new users") | Switched to a currently available model |
